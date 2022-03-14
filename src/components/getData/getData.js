@@ -155,14 +155,14 @@ setTimeout(function Currentweather(){
     .then(data=>console.log(data))
   }
 
-  setTimeout(weatherPressure, 1100)
-  setInterval(weatherPressure, 900000)
+  setTimeout(weatherPressure, 1000)
+  setInterval(weatherPressure, 600000)
 
-  setTimeout(weatherTemperature, 1200)
-  setInterval(weatherTemperature, 900000)
+  setTimeout(weatherTemperature, 1000)
+  setInterval(weatherTemperature, 600000)
 
-  setTimeout(weatherCity, 1300)
-  setInterval(weatherCity, 900000)
+  setTimeout(weatherCity, 1000)
+  setInterval(weatherCity, 600000)
 
-  setTimeout(weatherCityZ, 1400)
-  setInterval(weatherCityZ, 900000)
+  setTimeout(weatherCityZ, 1000)
+  setInterval(weatherCityZ, 600000)
