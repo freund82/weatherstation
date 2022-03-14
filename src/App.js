@@ -1,16 +1,15 @@
 import Currentweather from "./components/getData/getData";
-
+import weatherChart from "./components/weatherChart/weatherChart";
 
 
 
 function App() {
-  var x="Test"
   return (
     <div className="container">
       <div className="weatherBlock">
       <div className="city">
         <div className="cityWeatherItem">
-          {x}
+          
         </div>
         <div className="cityWeather">
           
@@ -23,8 +22,17 @@ function App() {
         <div className="Temperature">
           
         </div>
-        <div id="test">
+        <hr></hr>
+        
+        <div id="pressure">
         </div>
+        <hr></hr>
+
+        <div className="chart">
+            <h4 className="chartTitle">График давления</h4>
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+
       </div>
       {/*End*/}
       </div>

@@ -63,7 +63,7 @@ position: relative;
   background-color:#45353D;
   filter:opacity(90%);
   font-size:5rem;
-  text-align: center;
+  justify-content: space-around;
   align-items: center;
   color:#fff;
 }
@@ -89,7 +89,17 @@ position: relative;
   justify-content: center;
   align-items: center;
 }
-#test{
+#pressure{
 font-size:3rem;
 text-align:center;
+}
+
+.chart{
+  width:30rem;
+  height:20rem;
+  margin:0 auto;
+}
+
+.chartTitle{
+  text-align: center;
 }
