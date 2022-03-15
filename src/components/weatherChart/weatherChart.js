@@ -2,35 +2,28 @@ import { Chart, registerables} from 'chart.js';
 
 Chart.register(...registerables);
 
+function update(){
+    window.location.reload()
+}
+setInterval(update, 601000)
 
-
-
-var pres=[]
 
 
 function chartWeather(){
-    var i=0;
     const currDate = new Date().toLocaleDateString();
     var rr=document.querySelector("#city")
-    var Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
+    var Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
     fetch(Lobnya)
     .then(responce=>responce.json())
-    .then(p=>pres.push((((p.main.pressure)*0.750064)-18).toFixed(0))) 
+    .then(p=>{var i=localStorage.length; localStorage.setItem(i, (((p.main.pressure)*0.750064)-18).toFixed(0)); 
+        if(localStorage.length-1==10){
+            localStorage.clear()
+        }/*(localStorage.length-1==10)?localStorage.clear():null;*/})/*(p=>pres.push((((p.main.pressure)*0.750064)-18).toFixed(0)))*/ 
 }
 
 
 setInterval(chartWeather, 600000)
 
-function local(){
-    pres.map((item, index)=>localStorage.setItem(index, item))
-}
-setInterval(local, 600000)
-
-function clearData(){
-    localStorage.clear()
-}
-
-setInterval(clearData, 2400000)
 
 setTimeout(function drawChart(){
 const ctx = document.getElementById('myChart').getContext('2d');

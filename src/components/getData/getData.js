@@ -2,7 +2,7 @@
 setTimeout(function Currentweather(){
     const currDate = new Date().toLocaleDateString();
     let rr=document.querySelector("#city")
-    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
+    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
     fetch(Lobnya)
     .then(responce=>responce.json())
     .then(data=>{rr.innerHTML=data.name+' '+currDate;
@@ -125,7 +125,7 @@ setTimeout(function Currentweather(){
 
   function weatherPressure(){
     let rr=document.querySelector("#pressure")
-    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
+    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
     fetch(Lobnya)
     .then(responce=>responce.json())
     .then(data=>rr.innerHTML=(((data.main.pressure)*0.750064)-18).toFixed(0)+" "+"мм")
@@ -133,27 +133,27 @@ setTimeout(function Currentweather(){
 
   function weatherTemperature(){
     let rr=document.querySelector(".Temperature")
-    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
+    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
     fetch(Lobnya)
     .then(responce=>responce.json())
-    .then(data=>rr.innerHTML=((data.main.temp)-273.15).toFixed(0)+" "+"&deg;C")
+    .then(data=>rr.innerHTML=((data.main.temp).toFixed(0)+" "+"&deg;C"))
   }
 
   function weatherCity(){
     let rr=document.querySelector(".cityWeather")
-    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
+    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
     fetch(Lobnya)
     .then(responce=>responce.json())
     .then(data=>rr.innerHTML=(data.weather[0].description))
   }
 
-  function weatherCityZ(){
+  /*function weatherCityZ(){
     let rr=document.querySelector(".cityWeather")
-    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
+    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
     fetch(Lobnya)
     .then(responce=>responce.json())
     .then(data=>console.log(data))
-  }
+  }*/
 
   setTimeout(weatherPressure, 1000)
   setInterval(weatherPressure, 600000)
@@ -164,5 +164,5 @@ setTimeout(function Currentweather(){
   setTimeout(weatherCity, 1000)
   setInterval(weatherCity, 600000)
 
-  setTimeout(weatherCityZ, 1000)
-  setInterval(weatherCityZ, 600000)
+  /*setTimeout(weatherCityZ, 1000)
+  setInterval(weatherCityZ, 600000)*/
