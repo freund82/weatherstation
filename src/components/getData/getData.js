@@ -186,6 +186,7 @@ setTimeout(function Currentweather(){
   }
  setInterval(weatherCityDisplayShow, 60000)
 
+ /*Пропоруия по таймеру 1 к 2 30 секунд выключено и 60 секунд включено. У меня в коде ясно горит 30 секунд и затем на 30 секунд отключается и в это время 30 секунд горит ветер*/
  
   /*function weatherCityZ(){
     let rr=document.querySelector(".cityWeather")
