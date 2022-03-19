@@ -174,8 +174,9 @@ setTimeout(function Currentweather(){
     disp.style.display="none";
     dispWind.style.display="block"
   }
-
-  setInterval(weatherCityDisplayHide, 20000)
+  
+  setInterval(weatherCityDisplayHide, 30000)
+ 
 
   function weatherCityDisplayShow(){
     var disp=document.querySelector(".cityWeather")
@@ -183,9 +184,9 @@ setTimeout(function Currentweather(){
     disp.style.display="block";
     dispWind.style.display="none"
   }
+ setInterval(weatherCityDisplayShow, 60000)
 
-  setInterval(weatherCityDisplayShow, 40000)
-
+ 
   /*function weatherCityZ(){
     let rr=document.querySelector(".cityWeather")
     let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
