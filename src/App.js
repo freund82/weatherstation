@@ -11,8 +11,9 @@ function App() {
         <div className="cityWeatherItem">
           
         </div>
-        <div className="cityWeather">
-          
+        <div className="cityW">
+          <span className="cityWeather"></span>
+          <span className="wind"> юз 5м/с</span>
         </div>
         <div id="city" className="cityDate">
         </div>
@@ -20,12 +21,12 @@ function App() {
      {/*Weather block*/}
       <div className="weather">
         <div className="Temperature">
-          
         </div>
         <hr></hr>
-        
-        <div id="pressure">
+        <div className="press">
+        <span id="pressure"></span> <span>/</span> <span id="hum"></span>
         </div>
+        
         <hr></hr>
 
         <div className="chart">

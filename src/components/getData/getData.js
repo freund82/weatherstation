@@ -118,8 +118,29 @@ setTimeout(function Currentweather(){
             kk.appendChild(xx);
             break;
           }
+  var humid = document.querySelector("#hum"); humid.innerHTML=`${data.main.humidity} %`;
+  var wind = document.querySelector(".wind")
+  if(data.wind.deg==0 || data.wind.deg==360){
+    wind.innerHTML=`c ${data.wind.speed} м/с`;
+  }else if(data.wind.deg>0 && data.wind.deg<90){
+    wind.innerHTML=`св ${data.wind.speed} м/с`;
+  }else if(data.wind.deg==90){
+    wind.innerHTML=`в ${data.wind.speed} м/с`;
+  }else if(data.wind.deg>90 && data.wind.deg<180){
+    wind.innerHTML=`юв ${data.wind.speed} м/с`;
+  }else if(data.wind.deg==180){
+    wind.innerHTML=`ю ${data.wind.speed} м/с`;
+  }else if(data.wind.deg>180 && data.wind.deg<270){
+    wind.innerHTML=`юз ${data.wind.speed} м/с`;
+  }else if(data.wind.deg==270){
+    wind.innerHTML=`з ${data.wind.speed} м/с`;
+  }else if(data.wind.deg>270 && data.wind.deg<360){
+    wind.innerHTML=`cз ${data.wind.speed} м/с`;
+  }else{
+    wind.innerHTML=`штиль`;
+  }
   
-  })
+})
   }, 1000)
 
 
@@ -144,8 +165,26 @@ setTimeout(function Currentweather(){
     let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
     fetch(Lobnya)
     .then(responce=>responce.json())
-    .then(data=>rr.innerHTML=(data.weather[0].description))
+    .then(data=>rr.innerHTML=`${data.weather[0].description}`)
   }
+
+  function weatherCityDisplayHide(){
+    var disp=document.querySelector(".cityWeather")
+    var dispWind=document.querySelector(".wind")
+    disp.style.display="none";
+    dispWind.style.display="block"
+  }
+
+  setInterval(weatherCityDisplayHide, 20000)
+
+  function weatherCityDisplayShow(){
+    var disp=document.querySelector(".cityWeather")
+    var dispWind=document.querySelector(".wind")
+    disp.style.display="block";
+    dispWind.style.display="none"
+  }
+
+  setInterval(weatherCityDisplayShow, 40000)
 
   /*function weatherCityZ(){
     let rr=document.querySelector(".cityWeather")
