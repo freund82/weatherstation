@@ -143,4 +143,10 @@ text-align:center;
     .cityWeatherItem{
       margin-bottom: 0;
     }
+    .cityW{
+      height:8rem;
+    }
+    .cityDate{
+      height:8rem;
+    }
 }
