@@ -129,10 +129,18 @@ text-align:center;
       background-repeat: repeat;
     }
     .weatherBlock{
-      padding-left: 2rem;
       width:42rem;
       height:140rem;
       flex-wrap: wrap;
       justify-content: space-between;
+    }
+    .city{
+      width:100%;
+    }
+    .weather{
+      width:100%;
+    }
+    .cityWeatherItem{
+      margin-bottom: 0;
     }
 }
