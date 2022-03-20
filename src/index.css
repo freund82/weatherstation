@@ -123,6 +123,16 @@ text-align:center;
 
 @media(max-width:900px){
     html{
-      font-size:31.25%
+      font-size: 45%;
+    }
+    body{
+      background-repeat: repeat;
+    }
+    .weatherBlock{
+      padding-left: 2rem;
+      width:42rem;
+      height:140rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
     }
 }
