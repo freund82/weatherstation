@@ -83,3 +83,12 @@ function update(){
 setInterval(update, 599500)
 
 export default chartWeather()
+
+document.onkeydown = function(e){
+    e = e || window.event;
+    var key = e.which || e.keyCode;
+    if(key==68){
+        localStorage.clear();
+        window.location.reload();
+    }
+}

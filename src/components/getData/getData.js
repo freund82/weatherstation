@@ -207,3 +207,5 @@ setTimeout(function Currentweather(){
 
   /*setTimeout(weatherCityZ, 1000)
   setInterval(weatherCityZ, 600000)*/
+
+  
