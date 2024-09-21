@@ -2,11 +2,10 @@ setTimeout(function Currentweather() {
   const currDate = new Date().toLocaleDateString();
   let rr = document.querySelector('#city');
   let Lobnya =
-    'http://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39'; //Из-за санкций нужно писать ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39
+    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39'; //Из-за санкций нужно писать ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => {
-      console.log(data);
       rr.innerHTML = data.name + ' ' + currDate;
       var weatherId = data.weather[0].id;
       switch (weatherId) {
@@ -123,19 +122,19 @@ setTimeout(function Currentweather() {
       var humid = document.querySelector('#hum');
       humid.innerHTML = `${data.main.humidity} %`;
       var wind = document.querySelector('.wind');
-      if (data.wind.deg == 0 || data.wind.deg == 360) {
+      if (data.wind.deg === 0 || data.wind.deg === 360) {
         wind.innerHTML = `c ${data.wind.speed} м/с`;
       } else if (data.wind.deg > 0 && data.wind.deg < 90) {
         wind.innerHTML = `св ${data.wind.speed} м/с`;
-      } else if (data.wind.deg == 90) {
+      } else if (data.wind.deg === 90) {
         wind.innerHTML = `в ${data.wind.speed} м/с`;
       } else if (data.wind.deg > 90 && data.wind.deg < 180) {
         wind.innerHTML = `юв ${data.wind.speed} м/с`;
-      } else if (data.wind.deg == 180) {
+      } else if (data.wind.deg === 180) {
         wind.innerHTML = `ю ${data.wind.speed} м/с`;
       } else if (data.wind.deg > 180 && data.wind.deg < 270) {
         wind.innerHTML = `юз ${data.wind.speed} м/с`;
-      } else if (data.wind.deg == 270) {
+      } else if (data.wind.deg === 270) {
         wind.innerHTML = `з ${data.wind.speed} м/с`;
       } else if (data.wind.deg > 270 && data.wind.deg < 360) {
         wind.innerHTML = `cз ${data.wind.speed} м/с`;
@@ -148,7 +147,7 @@ setTimeout(function Currentweather() {
 function weatherPressure() {
   let rr = document.querySelector('#pressure');
   let Lobnya =
-    'http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
+    'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = (data.main.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'));
@@ -157,7 +156,7 @@ function weatherPressure() {
 function weatherTemperature() {
   let rr = document.querySelector('.Temperature');
   let Lobnya =
-    'http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
+    'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = data.main.temp.toFixed(0) + ' ' + '&deg;C'));
@@ -166,7 +165,7 @@ function weatherTemperature() {
 function weatherCity() {
   let rr = document.querySelector('.cityWeather');
   let Lobnya =
-    'http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
+    'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = `${data.weather[0].description}`));
