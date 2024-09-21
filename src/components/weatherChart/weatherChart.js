@@ -60,7 +60,8 @@ function drawChart() {
     options: {
       scales: {
         y: {
-          beginAtZero: false,
+          min: 720,
+          max: 790,
         },
       },
     },
