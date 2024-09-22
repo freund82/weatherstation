@@ -23,6 +23,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/11d.png,');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 500:
@@ -34,6 +35,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/10d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 511:
@@ -52,6 +54,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/13d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 300:
@@ -71,6 +74,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/09d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 701:
@@ -87,6 +91,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/50d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 800:
@@ -94,6 +99,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/01d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 801:
@@ -101,6 +107,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/02d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 802:
@@ -108,6 +115,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/03d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
         case 803:
@@ -116,6 +124,7 @@ function Currentweather() {
           xx.setAttribute('src', 'http://openweathermap.org/img/wn/04d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
+          kk.innerHTML = '';
           kk.appendChild(xx);
           break;
       }
