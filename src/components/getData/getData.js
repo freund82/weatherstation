@@ -147,7 +147,7 @@ function Currentweather() {
 function weatherPressure() {
   let rr = document.querySelector('#pressure');
   let Lobnya =
-    'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
+    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = (data.main.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'));
@@ -156,7 +156,7 @@ function weatherPressure() {
 function weatherTemperature() {
   let rr = document.querySelector('.Temperature');
   let Lobnya =
-    'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
+    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = data.main.temp.toFixed(0) + ' ' + '&deg;C'));
@@ -165,7 +165,7 @@ function weatherTemperature() {
 function weatherCity() {
   let rr = document.querySelector('.cityWeather');
   let Lobnya =
-    'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
+    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = `${data.weather[0].description}`));
