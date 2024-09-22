@@ -1,4 +1,4 @@
-setTimeout(function Currentweather() {
+function Currentweather() {
   const currDate = new Date().toLocaleDateString();
   let rr = document.querySelector('#city');
   let Lobnya =
@@ -142,7 +142,7 @@ setTimeout(function Currentweather() {
         wind.innerHTML = `штиль`;
       }
     });
-}, 1000);
+}
 
 function weatherPressure() {
   let rr = document.querySelector('#pressure');
@@ -197,6 +197,9 @@ setInterval(weatherCityDisplayShow, 60000);
     .then(responce=>responce.json())
     .then(data=>console.log(data))
   }*/
+
+setTimeout(Currentweather, 1000);
+setInterval(Currentweather, 600000);
 
 setTimeout(weatherPressure, 1000);
 setInterval(weatherPressure, 600000);

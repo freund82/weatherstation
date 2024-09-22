@@ -68,7 +68,7 @@ function drawChart() {
   });
 }
 
-setInterval(drawChart, 599500);
+//setInterval(drawChart, 599500);
 
 export default chartWeather();
 
