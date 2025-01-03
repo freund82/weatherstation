@@ -24,7 +24,13 @@ let myChart = null;
 function chartWeather() {
   var LobnyaChart =
     'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
-  fetch(LobnyaChart)
+  fetch(LobnyaChart, {
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+  })
     .then((responce) => responce.json())
     .then(
       (p) => {

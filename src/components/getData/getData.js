@@ -3,7 +3,13 @@ function Currentweather() {
   let rr = document.querySelector('#city');
   let Lobnya =
     'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39'; //Из-за санкций нужно писать ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39
-  fetch(Lobnya)
+  fetch(Lobnya, {
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+  })
     .then((responce) => responce.json())
     .then((data) => {
       rr.innerHTML = data.name + ' ' + currDate;
@@ -20,7 +26,7 @@ function Currentweather() {
         case 231:
         case 232:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/11d.png,');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/11d.png,');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -32,7 +38,7 @@ function Currentweather() {
         case 503:
         case 504:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/10d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/10d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -51,7 +57,7 @@ function Currentweather() {
         case 621:
         case 622:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/13d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/13d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -71,7 +77,7 @@ function Currentweather() {
         case 522:
         case 531:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/09d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/09d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -88,7 +94,7 @@ function Currentweather() {
         case 771:
         case 781:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/50d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/50d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -96,7 +102,7 @@ function Currentweather() {
           break;
         case 800:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/01d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/01d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -104,7 +110,7 @@ function Currentweather() {
           break;
         case 801:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/02d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/02d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -112,7 +118,7 @@ function Currentweather() {
           break;
         case 802:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/03d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/03d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -121,7 +127,7 @@ function Currentweather() {
         case 803:
         case 804:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'http://openweathermap.org/img/wn/04d.png');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/04d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
@@ -157,8 +163,14 @@ function weatherPressure() {
   let rr = document.querySelector('#pressure');
   let Lobnya =
     'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
-  fetch(Lobnya)
-    .then((responce) => responce.json())
+  fetch(Lobnya, {
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
     .then((data) => (rr.innerHTML = (data.main.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'));
 }
 
@@ -166,7 +178,13 @@ function weatherTemperature() {
   let rr = document.querySelector('.Temperature');
   let Lobnya =
     'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
-  fetch(Lobnya)
+  fetch(Lobnya, {
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+  })
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = data.main.temp.toFixed(0) + ' ' + '&deg;C'));
 }
@@ -175,7 +193,13 @@ function weatherCity() {
   let rr = document.querySelector('.cityWeather');
   let Lobnya =
     'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
-  fetch(Lobnya)
+  fetch(Lobnya, {
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+  })
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = `${data.weather[0].description}`));
 }
