@@ -1,3 +1,4 @@
+//Этот код до варианта deepseek.
 import { Chart, registerables } from 'chart.js';
 
 let pressureValues = [];
