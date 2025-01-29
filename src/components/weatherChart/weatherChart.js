@@ -1,49 +1,56 @@
-//Этот код до варианта deepseek.
 import { Chart, registerables } from 'chart.js';
 
+Chart.register(...registerables);
+
 let pressureValues = [];
+let myChart = null;
 
 // Сохранение последнего значения давления в localStorage перед закрытием окна браузера
 window.addEventListener('beforeunload', function () {
-  const lastPressureValue = pressureValues[pressureValues.length - 1];
-  localStorage.setItem('lastPressureValue', lastPressureValue);
+  if (pressureValues.length > 0) {
+    const lastPressureValue = pressureValues[pressureValues.length - 1];
+    localStorage.setItem('lastPressureValue', lastPressureValue);
+  }
 });
 
 // Загрузка последнего значения давления из localStorage при открытии окна
 window.addEventListener('load', function () {
   const lastPressureValue = localStorage.getItem('lastPressureValue');
-  if (lastPressureValue !== null) {
+  if (lastPressureValue !== null && !isNaN(lastPressureValue)) {
     pressureValues.push(lastPressureValue);
     drawChart();
   }
 });
 
-Chart.register(...registerables);
-
-let myChart = null;
-
 function chartWeather() {
-  var LobnyaChart =
+  const weatherApiUrl =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
       'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
     );
-  fetch(LobnyaChart)
-    .then((responce) => responce.json())
-    .then(
-      (p) => {
-        pressureValues.push((p.main.pressure * 0.750064 - 18).toFixed(0)); // Add new value to pressureValues array
-        drawChart(); // Update chart with new data
-      } /*(localStorage.length-1==10)?localStorage.clear():null;*/,
-    ); /*(p=>pres.push((((p.main.pressure)*0.750064)-18).toFixed(0)))*/
-}
 
-setInterval(chartWeather, 600000);
+  fetch(weatherApiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Ошибка сети');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const pressureValue = (data.main.pressure * 0.750064 - 18).toFixed(0);
+      pressureValues.push(pressureValue);
+      drawChart();
+    })
+    .catch((error) => {
+      console.error('Ошибка:', error);
+    });
+}
 
 function drawChart() {
   if (myChart) {
-    myChart.destroy(); // Destroy the previous chart
+    myChart.destroy(); // Уничтожить предыдущий график
   }
+
   const ctx = document.getElementById('myChart').getContext('2d');
 
   myChart = new Chart(ctx, {
@@ -52,7 +59,7 @@ function drawChart() {
       labels: pressureValues.map((value, index) => `${index + 1}`),
       datasets: [
         {
-          pointRadius: 0, // disable for a single dataset
+          pointRadius: 0, // Отключить точки на графике
           label: 'мм рт.с',
           data: pressureValues,
           backgroundColor: 'red',
@@ -72,15 +79,18 @@ function drawChart() {
   });
 }
 
-//setInterval(drawChart, 599500);
+// Обновление данных каждые 10 минут
+setInterval(chartWeather, 600000);
 
-export default chartWeather();
-
+// Очистка localStorage и перезагрузка страницы при нажатии клавиши "D"
 document.onkeydown = function (e) {
   e = e || window.event;
-  var key = e.which || e.keyCode;
+  const key = e.which || e.keyCode;
   if (key === 68) {
     localStorage.clear();
+    pressureValues = []; // Очистить массив значений
     window.location.reload();
   }
 };
+
+export default chartWeather;

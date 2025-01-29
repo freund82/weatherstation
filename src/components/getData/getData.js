@@ -1,235 +1,157 @@
-function Currentweather() {
-  const currDate = new Date().toLocaleDateString();
-  let rr = document.querySelector('#city');
-  let Lobnya =
+const weatherIcons = {
+  200: '11d',
+  201: '11d',
+  202: '11d',
+  210: '11d',
+  211: '11d',
+  212: '11d',
+  221: '11d',
+  230: '11d',
+  231: '11d',
+  232: '11d',
+  500: '10d',
+  501: '10d',
+  502: '10d',
+  503: '10d',
+  504: '10d',
+  511: '13d',
+  600: '13d',
+  601: '13d',
+  602: '13d',
+  611: '13d',
+  612: '13d',
+  613: '13d',
+  615: '13d',
+  616: '13d',
+  620: '13d',
+  621: '13d',
+  622: '13d',
+  300: '09d',
+  301: '09d',
+  302: '09d',
+  310: '09d',
+  311: '09d',
+  312: '09d',
+  313: '09d',
+  314: '09d',
+  321: '09d',
+  520: '09d',
+  521: '09d',
+  522: '09d',
+  531: '09d',
+  701: '50d',
+  711: '50d',
+  721: '50d',
+  731: '50d',
+  741: '50d',
+  751: '50d',
+  761: '50d',
+  762: '50d',
+  771: '50d',
+  781: '50d',
+  800: '01d',
+  801: '02d',
+  802: '03d',
+  803: '04d',
+  804: '04d',
+};
+
+const windDirections = {
+  0: 'с',
+  360: 'с',
+  90: 'в',
+  180: 'ю',
+  270: 'з',
+};
+
+function getWeatherData() {
+  return fetch(
     'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
-    ); //Так нужно делать через создание прокси так как бесплатный план не позволяет делать запросы напрямую из-за политики cors в openweathermap
-  fetch(Lobnya)
-    .then((responce) => responce.json())
+      encodeURIComponent(
+        'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+      ),
+  ).then((response) => response.json());
+}
+
+function displayWeatherIcon(weatherId) {
+  const iconCode = weatherIcons[weatherId];
+  if (iconCode) {
+    const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
+    const iconElement = document.createElement('img');
+    iconElement.setAttribute('src', iconUrl);
+    iconElement.setAttribute('width', '200');
+    iconElement.setAttribute('height', '200');
+    const weatherContainer = document.querySelector('.cityWeatherItem');
+    weatherContainer.innerHTML = '';
+    weatherContainer.appendChild(iconElement);
+  }
+}
+
+function getWindDirection(deg) {
+  if (deg > 0 && deg < 90) return 'св';
+  if (deg > 90 && deg < 180) return 'юв';
+  if (deg > 180 && deg < 270) return 'юз';
+  if (deg > 270 && deg < 360) return 'сз';
+  return windDirections[deg] || 'штиль';
+}
+
+function toggleWeatherDisplay() {
+  const cityWeatherElement = document.querySelector('.cityWeather');
+  const windElement = document.querySelector('.wind');
+
+  if (cityWeatherElement && windElement) {
+    // Переключение видимости
+    if (cityWeatherElement.style.display === 'none') {
+      cityWeatherElement.style.display = 'block';
+      windElement.style.display = 'none';
+    } else {
+      cityWeatherElement.style.display = 'none';
+      windElement.style.display = 'block';
+    }
+  }
+}
+
+function updateWeather() {
+  getWeatherData()
     .then((data) => {
-      rr.innerHTML = data.name + ' ' + currDate;
-      var weatherId = data.weather[0].id;
-      switch (weatherId) {
-        case 200:
-        case 201:
-        case 202:
-        case 210:
-        case 211:
-        case 212:
-        case 221:
-        case 230:
-        case 231:
-        case 232:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/11d.png,');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 500:
-        case 501:
-        case 502:
-        case 503:
-        case 504:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/10d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 511:
-        case 600:
-        case 601:
-        case 602:
-        case 611:
-        case 612:
-        case 613:
-        case 615:
-        case 616:
-        case 620:
-        case 621:
-        case 622:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/13d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 300:
-        case 301:
-        case 302:
-        case 310:
-        case 311:
-        case 312:
-        case 313:
-        case 314:
-        case 321:
-        case 520:
-        case 521:
-        case 522:
-        case 531:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/09d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 701:
-        case 711:
-        case 721:
-        case 731:
-        case 741:
-        case 751:
-        case 761:
-        case 762:
-        case 771:
-        case 781:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/50d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 800:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/01d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 801:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/02d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 802:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/03d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 803:
-        case 804:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/04d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-      }
-      var humid = document.querySelector('#hum');
-      humid.innerHTML = `${data.main.humidity} %`;
-      var wind = document.querySelector('.wind');
-      if (data.wind.deg === 0 || data.wind.deg === 360) {
-        wind.innerHTML = `c ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 0 && data.wind.deg < 90) {
-        wind.innerHTML = `св ${data.wind.speed} м/с`;
-      } else if (data.wind.deg === 90) {
-        wind.innerHTML = `в ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 90 && data.wind.deg < 180) {
-        wind.innerHTML = `юв ${data.wind.speed} м/с`;
-      } else if (data.wind.deg === 180) {
-        wind.innerHTML = `ю ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 180 && data.wind.deg < 270) {
-        wind.innerHTML = `юз ${data.wind.speed} м/с`;
-      } else if (data.wind.deg === 270) {
-        wind.innerHTML = `з ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 270 && data.wind.deg < 360) {
-        wind.innerHTML = `cз ${data.wind.speed} м/с`;
+      const currDate = new Date().toLocaleDateString();
+      document.querySelector('#city').innerHTML = `${data.name} ${currDate}`;
+      displayWeatherIcon(data.weather[0].id);
+      document.querySelector('#hum').innerHTML = `${data.main.humidity} %`;
+      document.querySelector('.wind').innerHTML = `${getWindDirection(data.wind.deg)} ${
+        data.wind.speed
+      } м/с`;
+      document.querySelector('#pressure').innerHTML = `${(
+        data.main.pressure * 0.750064 -
+        18
+      ).toFixed(0)} мм`;
+      document.querySelector('.Temperature').innerHTML = `${data.main.temp.toFixed(0)} &deg;C`;
+      document.querySelector('.cityWeather').innerHTML = data.weather[0].description;
+
+      // Сохраняем текущее состояние видимости
+      const cityWeatherElement = document.querySelector('.cityWeather');
+      const windElement = document.querySelector('.wind');
+      if (cityWeatherElement.style.display === 'none') {
+        cityWeatherElement.style.display = 'block';
+        windElement.style.display = 'none';
       } else {
-        wind.innerHTML = `штиль`;
+        cityWeatherElement.style.display = 'none';
+        windElement.style.display = 'block';
       }
+    })
+    .catch((error) => {
+      console.error('Ошибка:', error);
     });
 }
 
-function weatherPressure() {
-  let rr = document.querySelector('#pressure');
-  let Lobnya =
-    'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
-    );
-  fetch(Lobnya)
-    .then((response) => response.json())
-    .then((data) => (rr.innerHTML = (data.main.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'));
-}
+// Первое обновление данных при загрузке страницы
+setTimeout(updateWeather, 1000);
 
-function weatherTemperature() {
-  let rr = document.querySelector('.Temperature');
-  let Lobnya =
-    'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
-    );
-  fetch(Lobnya)
-    .then((responce) => responce.json())
-    .then((data) => (rr.innerHTML = data.main.temp.toFixed(0) + ' ' + '&deg;C'));
-}
+// Обновление данных каждые 10 минут
+setInterval(updateWeather, 600000);
 
-function weatherCity() {
-  let rr = document.querySelector('.cityWeather');
-  let Lobnya =
-    'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
-    );
-  fetch(Lobnya)
-    .then((responce) => responce.json())
-    .then((data) => (rr.innerHTML = `${data.weather[0].description}`));
-}
+// Переключение видимости каждые 2 минуты
+setInterval(toggleWeatherDisplay, 120000);
 
-function weatherCityDisplayHide() {
-  var disp = document.querySelector('.cityWeather');
-  var dispWind = document.querySelector('.wind');
-  disp.style.display = 'none';
-  dispWind.style.display = 'block';
-}
-
-setInterval(weatherCityDisplayHide, 30000);
-
-function weatherCityDisplayShow() {
-  var disp = document.querySelector('.cityWeather');
-  var dispWind = document.querySelector('.wind');
-  disp.style.display = 'block';
-  dispWind.style.display = 'none';
-}
-setInterval(weatherCityDisplayShow, 60000);
-
-/*Пропоруия по таймеру 1 к 2 30 секунд выключено и 60 секунд включено. У меня в коде ясно горит 30 секунд и затем на 30 секунд отключается и в это время 30 секунд горит ветер*/
-
-/*function weatherCityZ(){
-    let rr=document.querySelector(".cityWeather")
-    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
-    fetch(Lobnya)
-    .then(responce=>responce.json())
-    .then(data=>console.log(data))
-  }*/
-
-setTimeout(Currentweather, 1000);
-setInterval(Currentweather, 600000);
-
-setTimeout(weatherPressure, 1000);
-setInterval(weatherPressure, 600000);
-
-setTimeout(weatherTemperature, 1000);
-setInterval(weatherTemperature, 600000);
-
-setTimeout(weatherCity, 1000);
-setInterval(weatherCity, 600000);
-
-/*setTimeout(weatherCityZ, 1000)
-  setInterval(weatherCityZ, 600000)*/
+// Первое переключение при загрузке страницы
+toggleWeatherDisplay();
