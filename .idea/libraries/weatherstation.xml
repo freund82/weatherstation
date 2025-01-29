@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="weatherstation">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/weatherstation.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

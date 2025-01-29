@@ -2,14 +2,11 @@ function Currentweather() {
   const currDate = new Date().toLocaleDateString();
   let rr = document.querySelector('#city');
   let Lobnya =
-    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39'; //Из-за санкций нужно писать ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39
-  fetch(Lobnya, {
-    mode: 'no-cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
-    },
-  })
+    'https://api.codetabs.com/v1/proxy?quest=' +
+    encodeURIComponent(
+      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+    ); //Так нужно делать через создание прокси так как бесплатный план не позволяет делать запросы напрямую из-за политики cors в openweathermap
+  fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => {
       rr.innerHTML = data.name + ' ' + currDate;
@@ -162,14 +159,11 @@ function Currentweather() {
 function weatherPressure() {
   let rr = document.querySelector('#pressure');
   let Lobnya =
-    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
-  fetch(Lobnya, {
-    mode: 'no-cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
-    },
-  })
+    'https://api.codetabs.com/v1/proxy?quest=' +
+    encodeURIComponent(
+      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+    );
+  fetch(Lobnya)
     .then((response) => response.json())
     .then((data) => (rr.innerHTML = (data.main.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'));
 }
@@ -177,14 +171,11 @@ function weatherPressure() {
 function weatherTemperature() {
   let rr = document.querySelector('.Temperature');
   let Lobnya =
-    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
-  fetch(Lobnya, {
-    mode: 'no-cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
-    },
-  })
+    'https://api.codetabs.com/v1/proxy?quest=' +
+    encodeURIComponent(
+      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+    );
+  fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = data.main.temp.toFixed(0) + ' ' + '&deg;C'));
 }
@@ -192,14 +183,11 @@ function weatherTemperature() {
 function weatherCity() {
   let rr = document.querySelector('.cityWeather');
   let Lobnya =
-    'https://ru.api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39';
-  fetch(Lobnya, {
-    mode: 'no-cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
-    },
-  })
+    'https://api.codetabs.com/v1/proxy?quest=' +
+    encodeURIComponent(
+      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+    );
+  fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => (rr.innerHTML = `${data.weather[0].description}`));
 }
