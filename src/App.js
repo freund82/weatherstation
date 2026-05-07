@@ -1,41 +1,34 @@
-import Currentweather from "./components/getData/getData";
-import weatherChart from "./components/weatherChart/weatherChart";
-
-
+import Currentweather from './components/getData/getData';
+import weatherChart from './components/weatherChart/weatherChart';
 
 function App() {
   return (
     <div className="container">
       <div className="weatherBlock">
-      <div className="city">
-        <div className="cityWeatherItem">
-          
+        <div className="city">
+          <div className="cityWeatherItem"></div>
+          <div className="cityW">
+            <span className="cityWeather"></span>
+            <span className="wind"></span>
+          </div>
+          <div id="city" className="cityDate"></div>
         </div>
-        <div className="cityW">
-          <span className="cityWeather"></span>
-          <span className="wind"> юз 5м/с</span>
-        </div>
-        <div id="city" className="cityDate">
-        </div>
-      </div>
-     {/*Weather block*/}
-      <div className="weather">
-        <div className="Temperature">
-        </div>
-        <hr></hr>
-        <div className="press">
-        <span id="pressure"></span> <span>/</span> <span id="hum"></span>
-        </div>
-        
-        <hr></hr>
+        {/*Weather block*/}
+        <div className="weather">
+          <div className="Temperature"></div>
+          <hr></hr>
+          <div className="press">
+            <span id="pressure"></span> <span>/</span> <span id="hum"></span>
+          </div>
 
-        <div className="chart">
+          <hr></hr>
+
+          <div className="chart">
             <h4 className="chartTitle">График давления</h4>
             <canvas id="myChart" width="400" height="400"></canvas>
+          </div>
         </div>
-
-      </div>
-      {/*End*/}
+        {/*End*/}
       </div>
     </div>
   );
