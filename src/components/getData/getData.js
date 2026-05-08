@@ -1,6 +1,8 @@
 function Currentweather() {
   const currDate = new Date().toLocaleDateString();
   let rr = document.querySelector('#city');
+  let alertBlock = document.querySelector('.alertBlock');
+  let alert = document.querySelector('.alert');
   let Lobnya =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
@@ -9,6 +11,12 @@ function Currentweather() {
   fetch(Lobnya)
     .then((responce) => responce.json())
     .then((data) => {
+      /*alert info*/
+      if (data?.alerts) {
+        alertBlock.style.opacity = 1;
+        alert.innerHTML = `ALLERT!!! ${data.alerts.description}`;
+      }
+      /*end alert info*/
       rr.innerHTML = data.name + ' ' + currDate;
       var weatherId = data.weather[0].id;
       switch (weatherId) {

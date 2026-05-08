@@ -30,6 +30,11 @@ function App() {
         </div>
         {/*End*/}
       </div>
+      {/*Weather alerts*/}
+      <div className="alertBlock">
+        <div className="alert"></div>
+      </div>
+      {/*End*/}
     </div>
   );
 }
