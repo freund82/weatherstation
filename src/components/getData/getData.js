@@ -32,7 +32,7 @@ function Currentweather() {
         case 231:
         case 232:
           var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/11d.png,');
+          xx.setAttribute('src', 'https://openweathermap.org/img/wn/11d.png');
           xx.setAttribute('width', '200', 'height', '200');
           var kk = document.querySelector('.cityWeatherItem');
           kk.innerHTML = '';
