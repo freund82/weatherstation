@@ -126,10 +126,7 @@ text-align:center;
 Alerts styles
 ***********/
 .alertBlock{
-  opacity:0;
-  position: absolute;
-  top:5%;
-  left:0;
+  opacity: 0;
   width:100%;
   height:4rem;
   background-color:red;
@@ -148,10 +145,10 @@ Alerts styles
 }
 @keyframes alert{
   0%{
-    transform :translateX(96%);
+    transform :translateX(100%);
   }
   100%{
-    transform :translateX(2%);
+    transform :translateX(0%);
   } 
 }
 

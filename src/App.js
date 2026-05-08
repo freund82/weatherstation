@@ -7,6 +7,11 @@ function App() {
       <div className="weatherBlock">
         <div className="city">
           <div className="cityWeatherItem"></div>
+          {/*Weather alerts*/}
+          <div className="alertBlock">
+            <div className="alert">Alert!!!</div>
+          </div>
+          {/*End*/}
           <div className="cityW">
             <span className="cityWeather"></span>
             <span className="wind"></span>
@@ -30,11 +35,6 @@ function App() {
         </div>
         {/*End*/}
       </div>
-      {/*Weather alerts*/}
-      <div className="alertBlock">
-        <div className="alert"></div>
-      </div>
-      {/*End*/}
     </div>
   );
 }
