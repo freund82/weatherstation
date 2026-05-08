@@ -144,7 +144,7 @@ function Currentweather() {
       humid.innerHTML = `${data.current.humidity} %`;
       var wind = document.querySelector('.wind');
       if (data.current.wind_deg === 0 || data.current.wind_deg === 359) {
-        wind.innerHTML = `c ${data.current.wind.speed} (${data.current.wind_gust})м/с`;
+        wind.innerHTML = `c ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
       } else if (data.current.wind_deg > 0 && data.current.wind_deg < 90) {
         wind.innerHTML = `св ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
       } else if (data.current.wind_deg === 90) {
