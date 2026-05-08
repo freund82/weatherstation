@@ -1,246 +1,207 @@
-function Currentweather() {
-  const currDate = new Date().toLocaleDateString();
-  let rr = document.querySelector('#city');
-  let alertBlock = document.querySelector('.alertBlock');
-  let alert = document.querySelector('.alert');
-  let Lobnya =
+// ========== УТИЛИТЫ ==========
+
+// Определение направления ветра
+function getWindDirection(deg) {
+  if (deg === undefined || deg === null) return '';
+  if (deg === 0) return 'с';
+  if (deg > 0 && deg < 90) return 'св';
+  if (deg === 90) return 'в';
+  if (deg > 90 && deg < 180) return 'юв';
+  if (deg === 180) return 'ю';
+  if (deg > 180 && deg < 270) return 'юз';
+  if (deg === 270) return 'з';
+  if (deg > 270 && deg < 360) return 'сз';
+  return '';
+}
+
+// Форматирование строки ветра
+function formatWind(speed, gust, direction) {
+  if (!speed || speed === 0) return 'штиль';
+
+  const speedRounded = speed.toFixed(2);
+  const gustRounded = gust ? gust.toFixed(2) : '0';
+
+  return `${direction} ${speedRounded} (${gustRounded}) м/с`;
+}
+
+// Установка иконки погоды по ID
+function setWeatherIcon(weatherId) {
+  let iconName;
+
+  if ([200, 201, 202, 210, 211, 212, 221, 230, 231, 232].includes(weatherId)) {
+    iconName = '11d';
+  } else if ([500, 501, 502, 503, 504].includes(weatherId)) {
+    iconName = '10d';
+  } else if ([511, 600, 601, 602, 611, 612, 613, 615, 616, 620, 621, 622].includes(weatherId)) {
+    iconName = '13d';
+  } else if (
+    [300, 301, 302, 310, 311, 312, 313, 314, 321, 520, 521, 522, 531].includes(weatherId)
+  ) {
+    iconName = '09d';
+  } else if ([701, 711, 721, 731, 741, 751, 761, 762, 771, 781].includes(weatherId)) {
+    iconName = '50d';
+  } else if (weatherId === 800) {
+    iconName = '01d';
+  } else if (weatherId === 801) {
+    iconName = '02d';
+  } else if (weatherId === 802) {
+    iconName = '03d';
+  } else if ([803, 804].includes(weatherId)) {
+    iconName = '04d';
+  } else {
+    iconName = '01d';
+  }
+
+  const img = document.createElement('img');
+  img.src = `https://openweathermap.org/img/wn/${iconName}.png`;
+  img.width = 200;
+  img.height = 200;
+  img.alt = 'погода';
+
+  const container = document.querySelector('.cityWeatherItem');
+  if (container) {
+    container.innerHTML = '';
+    container.appendChild(img);
+  }
+}
+
+// Конвертация давления (гПа → мм рт. ст. с поправкой на высоту Лобни)
+function convertPressure(hpa) {
+  // 1 гПа = 0.750064 мм рт. ст.
+  // Поправка -18 мм для высоты ~146м над уровнем моря
+  return (hpa * 0.750064 - 18).toFixed(0);
+}
+
+// ========== ПЕРЕКЛЮЧЕНИЕ ОТОБРАЖЕНИЯ ==========
+
+let showWind = true; // true = показываем ветер, false = показываем описание
+
+function toggleDisplay() {
+  const descriptionElement = document.querySelector('.cityWeather');
+  const windElement = document.querySelector('.wind');
+
+  if (!descriptionElement || !windElement) return;
+
+  if (showWind) {
+    // Показываем ветер, прячем описание
+    descriptionElement.style.display = 'none';
+    windElement.style.display = 'block';
+  } else {
+    // Показываем описание, прячем ветер
+    descriptionElement.style.display = 'block';
+    windElement.style.display = 'none';
+  }
+
+  // Переключаем флаг на следующий раз
+  showWind = !showWind;
+}
+
+// ========== ОСНОВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ ==========
+
+function updateWeather() {
+  const url =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
       'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
-    ); //Так нужно делать через создание прокси так как бесплатный план не позволяет делать запросы напрямую из-за политики cors в openweathermap
-  fetch(Lobnya)
-    .then((response) => response.json())
+    );
+
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
-      console.log(data);
-      /*alert info*/
-      if (data?.alerts) {
-        alertBlock.style.opacity = 1;
-        alert.innerHTML = `ALLERT!!! ${data.alerts.description}`;
+      console.log('Данные получены:', data);
+
+      // 1. Дата и город
+      const currDate = new Date().toLocaleDateString('ru-RU');
+      const cityElement = document.querySelector('#city');
+      cityElement.innerHTML = `Лобня ${currDate}`;
+
+      // 2. Alert (штормовое предупреждение)
+      const alertBlock = document.querySelector('.alertBlock');
+      const alertElement = document.querySelector('.alert');
+      if (data?.alerts && alertBlock && alertElement) {
+        alertBlock.style.opacity = '1';
+        alertElement.innerHTML = `⚠️ ALERT!!! ${data.alerts.description}`;
+      } else if (alertBlock) {
+        alertBlock.style.opacity = '0';
       }
-      /*end alert info*/
-      rr.innerHTML = 'Лобня' + ' ' + currDate;
-      var weatherId = data.current.weather[0].id;
-      switch (weatherId) {
-        case 200:
-        case 201:
-        case 202:
-        case 210:
-        case 211:
-        case 212:
-        case 221:
-        case 230:
-        case 231:
-        case 232:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/11d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 500:
-        case 501:
-        case 502:
-        case 503:
-        case 504:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/10d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 511:
-        case 600:
-        case 601:
-        case 602:
-        case 611:
-        case 612:
-        case 613:
-        case 615:
-        case 616:
-        case 620:
-        case 621:
-        case 622:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/13d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 300:
-        case 301:
-        case 302:
-        case 310:
-        case 311:
-        case 312:
-        case 313:
-        case 314:
-        case 321:
-        case 520:
-        case 521:
-        case 522:
-        case 531:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/09d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 701:
-        case 711:
-        case 721:
-        case 731:
-        case 741:
-        case 751:
-        case 761:
-        case 762:
-        case 771:
-        case 781:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/50d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 800:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/01d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 801:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/02d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 802:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/03d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
-        case 803:
-        case 804:
-          var xx = document.createElement('img');
-          xx.setAttribute('src', 'https://openweathermap.org/img/wn/04d.png');
-          xx.setAttribute('width', '200', 'height', '200');
-          var kk = document.querySelector('.cityWeatherItem');
-          kk.innerHTML = '';
-          kk.appendChild(xx);
-          break;
+
+      // 3. Иконка погоды
+      if (data.current?.weather?.[0]?.id) {
+        setWeatherIcon(data.current.weather[0].id);
       }
-      var humid = document.querySelector('#hum');
-      humid.innerHTML = `${data.current.humidity} %`;
-      var wind = document.querySelector('.wind');
-      if (data.current.wind_deg === 0 || data.current.wind_deg === 359) {
-        wind.innerHTML = `c ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else if (data.current.wind_deg > 0 && data.current.wind_deg < 90) {
-        wind.innerHTML = `св ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else if (data.current.wind_deg === 90) {
-        wind.innerHTML = `в ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else if (data.current.wind_deg > 90 && data.current.wind_deg < 180) {
-        wind.innerHTML = `юв ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else if (data.current.wind_deg === 180) {
-        wind.innerHTML = `ю ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else if (data.current.wind_deg > 180 && data.current.wind_deg < 270) {
-        wind.innerHTML = `юз ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else if (data.current.wind_deg === 270) {
-        wind.innerHTML = `з ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else if (data.current.wind_deg > 270 && data.current.wind_deg < 359) {
-        wind.innerHTML = `cз ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
-      } else {
-        wind.innerHTML = `штиль`;
+
+      // 4. Влажность (всегда показываем)
+      const humidElement = document.querySelector('#hum');
+      if (humidElement && data.current?.humidity !== undefined) {
+        humidElement.innerHTML = `${data.current.humidity} %`;
       }
+
+      // 5. Давление (всегда показываем)
+      const pressureElement = document.querySelector('#pressure');
+      if (pressureElement && data.current?.pressure !== undefined) {
+        pressureElement.innerHTML = `${convertPressure(data.current.pressure)} мм`;
+      }
+
+      // 6. Температура (всегда показываем)
+      const tempElement = document.querySelector('.Temperature');
+      if (tempElement && data.current?.temp !== undefined) {
+        tempElement.innerHTML = `${data.current.temp.toFixed(0)} &deg;C`;
+      }
+
+      // 7. Описание погоды (обновляем данные, но показываем/скрываем по таймеру)
+      const descElement = document.querySelector('.cityWeather');
+      if (descElement && data.current?.weather?.[0]?.description) {
+        descElement.innerHTML = data.current.weather[0].description;
+      }
+
+      // 8. Данные ветра (обновляем, но показываем/скрываем по таймеру)
+      const windElement = document.querySelector('.wind');
+      if (windElement && data.current) {
+        const windDeg = data.current.wind_deg;
+        const windSpeed = data.current.wind_speed;
+        const windGust = data.current.wind_gust;
+        const direction = getWindDirection(windDeg);
+        windElement.innerHTML = formatWind(windSpeed, windGust, direction);
+      }
+
+      // Важно: после обновления данных синхронизируем отображение
+      // (чтобы не сбилось, если showWind в нужном состоянии)
+      const descriptionElement = document.querySelector('.cityWeather');
+      const windDisplayElement = document.querySelector('.wind');
+
+      if (descriptionElement && windDisplayElement) {
+        if (showWind) {
+          descriptionElement.style.display = 'none';
+          windDisplayElement.style.display = 'block';
+        } else {
+          descriptionElement.style.display = 'block';
+          windDisplayElement.style.display = 'none';
+        }
+      }
+    })
+    .catch((error) => {
+      console.error('Ошибка при получении погоды:', error);
     });
 }
 
-function weatherPressure() {
-  let rr = document.querySelector('#pressure');
-  let Lobnya =
-    'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
-    );
-  fetch(Lobnya)
-    .then((response) => response.json())
-    .then(
-      (data) => (rr.innerHTML = (data.current.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'),
-    );
-}
+// ========== ЗАПУСК ==========
 
-function weatherTemperature() {
-  let rr = document.querySelector('.Temperature');
-  let Lobnya =
-    'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
-    );
-  fetch(Lobnya)
-    .then((response) => response.json())
-    .then((data) => (rr.innerHTML = data.current.temp.toFixed(0) + ' ' + '&deg;C'));
-}
+// Первоначальная загрузка данных через 1 секунду
+setTimeout(() => {
+  updateWeather();
+}, 1000);
 
-function weatherCity() {
-  let rr = document.querySelector('.cityWeather');
-  let Lobnya =
-    'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
-    );
-  fetch(Lobnya)
-    .then((response) => response.json())
-    .then((data) => (rr.innerHTML = `${data.current.weather[0].description}`));
-}
+// Автообновление данных каждые 10 минут
+setInterval(updateWeather, 600000);
 
-function weatherCityDisplayHide() {
-  var disp = document.querySelector('.cityWeather');
-  var dispWind = document.querySelector('.wind');
-  disp.style.display = 'none';
-  dispWind.style.display = 'block';
-}
+// Переключение отображения: 30 секунд ветер / 30 секунд описание
+setInterval(toggleDisplay, 30000); // Переключаем каждые 30 секунд
 
-setInterval(weatherCityDisplayHide, 30000);
-
-function weatherCityDisplayShow() {
-  var disp = document.querySelector('.cityWeather');
-  var dispWind = document.querySelector('.wind');
-  disp.style.display = 'block';
-  dispWind.style.display = 'none';
-}
-setInterval(weatherCityDisplayShow, 60000);
-
-/*Пропоруия по таймеру 1 к 2 30 секунд выключено и 60 секунд включено. У меня в коде ясно горит 30 секунд и затем на 30 секунд отключается и в это время 30 секунд горит ветер*/
-
-/*function weatherCityZ(){
-    let rr=document.querySelector(".cityWeather")
-    let Lobnya="http://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39";
-    fetch(Lobnya)
-    .then(responce=>responce.json())
-    .then(data=>console.log(data))
-  }*/
-
-setTimeout(Currentweather, 1000);
-setInterval(Currentweather, 600000);
-
-setTimeout(weatherPressure, 1000);
-setInterval(weatherPressure, 600000);
-
-setTimeout(weatherTemperature, 1000);
-setInterval(weatherTemperature, 600000);
-
-setTimeout(weatherCity, 1000);
-setInterval(weatherCity, 600000);
-
-/*setTimeout(weatherCityZ, 1000)
-  setInterval(weatherCityZ, 600000)*/
+// Запускаем первое переключение через 30 секунд после загрузки страницы
+// Чтобы сразу показать описание (по умолчанию showWind = true, значит сначала ветер)
+// Если хотите сначала описание, измените showWind = false
