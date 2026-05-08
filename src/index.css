@@ -126,7 +126,6 @@ text-align:center;
 Alerts styles
 ***********/
 .alertBlock{
-  opacity: 0;
   width:100%;
   height:4rem;
   background-color:red;
