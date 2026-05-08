@@ -6,19 +6,20 @@ function Currentweather() {
   let Lobnya =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
     ); //Так нужно делать через создание прокси так как бесплатный план не позволяет делать запросы напрямую из-за политики cors в openweathermap
   fetch(Lobnya)
-    .then((responce) => responce.json())
+    .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       /*alert info*/
       if (data?.alerts) {
         alertBlock.style.opacity = 1;
         alert.innerHTML = `ALLERT!!! ${data.alerts.description}`;
       }
       /*end alert info*/
-      rr.innerHTML = data.name + ' ' + currDate;
-      var weatherId = data.weather[0].id;
+      rr.innerHTML = 'Лобня' + ' ' + currDate;
+      var weatherId = data.current.weather[0].id;
       switch (weatherId) {
         case 200:
         case 201:
@@ -140,24 +141,24 @@ function Currentweather() {
           break;
       }
       var humid = document.querySelector('#hum');
-      humid.innerHTML = `${data.main.humidity} %`;
+      humid.innerHTML = `${data.current.humidity} %`;
       var wind = document.querySelector('.wind');
-      if (data.wind.deg === 0 || data.wind.deg === 360) {
-        wind.innerHTML = `c ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 0 && data.wind.deg < 90) {
-        wind.innerHTML = `св ${data.wind.speed} м/с`;
-      } else if (data.wind.deg === 90) {
-        wind.innerHTML = `в ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 90 && data.wind.deg < 180) {
-        wind.innerHTML = `юв ${data.wind.speed} м/с`;
-      } else if (data.wind.deg === 180) {
-        wind.innerHTML = `ю ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 180 && data.wind.deg < 270) {
-        wind.innerHTML = `юз ${data.wind.speed} м/с`;
-      } else if (data.wind.deg === 270) {
-        wind.innerHTML = `з ${data.wind.speed} м/с`;
-      } else if (data.wind.deg > 270 && data.wind.deg < 360) {
-        wind.innerHTML = `cз ${data.wind.speed} м/с`;
+      if (data.current.wind_deg === 0 || data.current.wind_deg === 359) {
+        wind.innerHTML = `c ${data.current.wind.speed} (${data.current.wind_gust})м/с`;
+      } else if (data.current.wind_deg > 0 && data.current.wind_deg < 90) {
+        wind.innerHTML = `св ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
+      } else if (data.current.wind_deg === 90) {
+        wind.innerHTML = `в ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
+      } else if (data.current.wind_deg > 90 && data.current.wind_deg < 180) {
+        wind.innerHTML = `юв ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
+      } else if (data.current.wind_deg === 180) {
+        wind.innerHTML = `ю ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
+      } else if (data.current.wind_deg > 180 && data.current.wind_deg < 270) {
+        wind.innerHTML = `юз ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
+      } else if (data.current.wind_deg === 270) {
+        wind.innerHTML = `з ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
+      } else if (data.current.wind_deg > 270 && data.current.wind_deg < 359) {
+        wind.innerHTML = `cз ${data.current.wind_speed} (${data.current.wind_gust})м/с`;
       } else {
         wind.innerHTML = `штиль`;
       }
@@ -169,11 +170,13 @@ function weatherPressure() {
   let Lobnya =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
     );
   fetch(Lobnya)
     .then((response) => response.json())
-    .then((data) => (rr.innerHTML = (data.main.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'));
+    .then(
+      (data) => (rr.innerHTML = (data.current.pressure * 0.750064 - 18).toFixed(0) + ' ' + 'мм'),
+    );
 }
 
 function weatherTemperature() {
@@ -181,11 +184,11 @@ function weatherTemperature() {
   let Lobnya =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
     );
   fetch(Lobnya)
-    .then((responce) => responce.json())
-    .then((data) => (rr.innerHTML = data.main.temp.toFixed(0) + ' ' + '&deg;C'));
+    .then((response) => response.json())
+    .then((data) => (rr.innerHTML = data.current.temp.toFixed(0) + ' ' + '&deg;C'));
 }
 
 function weatherCity() {
@@ -193,11 +196,11 @@ function weatherCity() {
   let Lobnya =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
     );
   fetch(Lobnya)
-    .then((responce) => responce.json())
-    .then((data) => (rr.innerHTML = `${data.weather[0].description}`));
+    .then((response) => response.json())
+    .then((data) => (rr.innerHTML = `${data.current.weather[0].description}`));
 }
 
 function weatherCityDisplayHide() {
