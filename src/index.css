@@ -127,20 +127,22 @@ Alerts styles
 ***********/
 .alertBlock{
   width:100%;
-  height:4rem;
+  height:10rem;
   background-color:red;
   color:#fff;
   display:flex;
   justify-content: right;
   align-items: center;
-  z-index:1000;
+  overflow: hidden;
 }
 
 .alert{
   width:100%;
   animation: alert 20s ease-in-out infinite;
   font-size:2rem;
+  font-family: 'Dosis', sans-serif;
   font-weight: bold;
+  text-align: center;
 }
 @keyframes alert{
   0%{

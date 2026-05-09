@@ -125,7 +125,7 @@ function updateWeather() {
       const alertElement = document.querySelector('.alert');
       if (data?.alerts && alertBlock && alertElement) {
         alertBlock.style.opacity = '1';
-        alertElement.innerHTML = `⚠️ ALERT!!! ${data.alerts.description}`;
+        alertElement.innerHTML = `${data.alerts[1].description}`;
       } else if (alertBlock) {
         alertBlock.style.opacity = '0';
       }
