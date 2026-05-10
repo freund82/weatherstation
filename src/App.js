@@ -9,7 +9,8 @@ function App() {
           <div className="cityWeatherItem"></div>
           {/*Weather alerts*/}
           <div className="alertBlock">
-            <div className="alert">Alert!!!</div>
+            <pre className="alert">Alert!!!</pre>
+            {/*Данный тег отображает текст так, как его изначально напечатали*/}
           </div>
           {/*End*/}
           <div className="cityW">
