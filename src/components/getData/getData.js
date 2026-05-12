@@ -72,6 +72,18 @@ function convertPressure(hpa) {
   return (hpa * 0.750064 - 18).toFixed(0);
 }
 
+//Вывод alert сообщений
+function alertData(alerts) {
+  let alertText = [...new Set(alerts.map((alert) => alert.description))].join('\n');
+  if (alertText.length > 100) {
+    let alertBlock = document.querySelector('.alertBlock');
+    alertBlock.style.height = '10rem';
+    return alertText;
+  }
+
+  return alertText;
+}
+
 // ========== ПЕРЕКЛЮЧЕНИЕ ОТОБРАЖЕНИЯ ==========
 
 let showWind = true; // true = показываем ветер, false = показываем описание
@@ -125,7 +137,7 @@ function updateWeather() {
       const alertElement = document.querySelector('.alert');
       if (data?.alerts && alertBlock && alertElement) {
         alertBlock.style.opacity = '1';
-        alertElement.innerHTML = `${data.alerts[1].description}`;
+        alertElement.innerHTML = alertData(data.alerts);
       } else if (alertBlock) {
         alertBlock.style.opacity = '0';
       }
