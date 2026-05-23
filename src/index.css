@@ -195,7 +195,8 @@ Sunrise Sunset styles
 
 @media(max-width:1200px){
   .sunBlock{
-    left:31.7%;
+    left:31.3%;
+    width: 31.5%;
   }
 }
 
@@ -231,5 +232,6 @@ Sunrise Sunset styles
     .sunBlock{
       top:28%;
       left:47.7%;
+      width:62.5%;
     }
 }
