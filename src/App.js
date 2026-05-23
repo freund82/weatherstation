@@ -1,9 +1,15 @@
 import Currentweather from './components/getData/getData';
 import weatherChart from './components/weatherChart/weatherChart';
+import SunImg from './assets/icons/sun.png';
 
 function App() {
   return (
     <div className="container">
+      {/*Sunrise and sunset block*/}
+      <div className="sunBlock">
+        <img className="sunImg" src={SunImg} className="sunImg" alt="sun"></img>
+      </div>
+      {/*End*/}
       <div className="weatherBlock">
         <div className="city">
           <div className="cityWeatherItem"></div>
