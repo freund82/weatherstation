@@ -89,15 +89,32 @@ function alertData(alerts) {
 }
 
 // ========== ВРЕМЯ РАССВЕТА И ЗАКАТА ==========
+
+let sunriseMinutesGlobal, sunsetMinutesGlobal, dayLengthGlobal;
+let sunInterval = null; // ЗАПУСК ДВИЖЕНИЯ СОЛНЦА
+
+const GROUND_HEIGHT = 1; // Высота земли в пикселях
+
 function SunriseSunset(weatherData) {
-  weatherData.sunrise = weatherData.sunrise.getHours() + ':' + weatherData.sunrise.getMinutes(); //Время рассвета в формате ЧЧ:ММ
-  weatherData.sunset = weatherData.sunset.getHours() + ':' + weatherData.sunset.getMinutes(); //Время заката в формате ЧЧ:ММ
+  weatherData.sunrise =
+    weatherData.sunrise.getHours().toString().padStart(2, '0') +
+    ':' +
+    weatherData.sunrise.getMinutes().toString().padStart(2, '0'); //Время рассвета в формате ЧЧ:ММ
+  weatherData.sunset =
+    weatherData.sunset.getHours().toString().padStart(2, '0') +
+    ':' +
+    weatherData.sunset.getMinutes().toString().padStart(2, '0'); //Время заката в формате ЧЧ:ММ
 
   // Конвертируем "HH:MM" в минуты от полуночи
   function timeToMinutes(timeStr) {
     const [hours, minutes] = timeStr.split(':').map(Number);
     return hours * 60 + minutes;
   }
+
+  // Сохраняем в глобальные переменные
+  sunriseMinutesGlobal = timeToMinutes(weatherData.sunrise);
+  sunsetMinutesGlobal = timeToMinutes(weatherData.sunset);
+  dayLengthGlobal = sunsetMinutesGlobal - sunriseMinutesGlobal;
 
   // Конвертируем минуты в "HH:MM"
   function minutesToTime(minutes) {
@@ -118,6 +135,9 @@ function SunriseSunset(weatherData) {
   // Элементы
   const sun = document.getElementById('sun');
   const horizon = document.getElementById('horizon');
+
+  // Запускаем движение солнца
+  startSunMovement();
 }
 
 // Функция для вычисления позиции солнца на дуге
@@ -131,7 +151,7 @@ function getSunPosition(percent, horizon) {
   const containerHeight = horizon.clientHeight;
 
   // Земля занимает нижние 80px, значит "небо" высотой containerHeight - 80
-  const skyHeight = containerHeight - 80;
+  const skyHeight = containerHeight - GROUND_HEIGHT;
 
   // X: от 5% слева до 95% справа (чтобы солнце не упиралось в края)
   const minX = containerWidth * 0.05;
@@ -149,7 +169,7 @@ function getSunPosition(percent, horizon) {
   const heightFromGround = maxHeight * yFactor;
 
   // Y координата = высота неба - высота от земли + смещение от земли
-  const y = containerHeight - 80 - heightFromGround + 20;
+  const y = containerHeight - GROUND_HEIGHT - heightFromGround + 20;
 
   return { x, y };
 }
@@ -159,6 +179,9 @@ function updateSunByMinutes(currentMinutes, sunriseMinutes, sunsetMinutes, dayLe
   // Если текущее время вне диапазона рассвет-закат -> солнце не видно или за горизонтом
   let percent = 0;
   let isDay = true;
+  const sun = document.getElementById('sun');
+
+  if (!sun) return; // Если элемента нет, выходим
 
   if (currentMinutes <= sunriseMinutes) {
     // До рассвета -> солнце в 0% (на горизонте слева, но невидимо)
@@ -175,21 +198,22 @@ function updateSunByMinutes(currentMinutes, sunriseMinutes, sunsetMinutes, dayLe
   }
 
   // Показываем/скрываем солнце в зависимости от времени суток
-  if (isDay) {
-    const sun = document.getElementById('sun');
+  if (isDay && dayLength > 0) {
     sun.style.display = 'block';
-    const { x, y } = getSunPosition(percent);
-    sun.style.left = `${x - sun.offsetWidth / 2}px`;
-    sun.style.bottom = `${y}px`;
-    sun.style.top = 'auto'; // используем bottom для удобства
+    const horizon = document.getElementById('horizon');
+    if (horizon) {
+      const { x, y } = getSunPosition(percent, horizon);
+      sun.style.left = `${x - sun.offsetWidth / 2}px`;
+      sun.style.bottom = `${y}px`;
+      sun.style.top = 'auto'; // используем bottom для удобства
 
-    // Дополнительно меняем яркость/размер в зависимости от высоты
-    const brightness = 0.5 + Math.sin(Math.PI * percent) * 0.5;
-    sun.style.opacity = 0.7 + brightness * 0.3;
-    sun.style.transform = `scale(${0.8 + brightness * 0.4})`;
+      // Дополнительно меняем яркость/размер в зависимости от высоты
+      const brightness = 0.5 + Math.sin(Math.PI * percent) * 0.5;
+      sun.style.opacity = 0.7 + brightness * 0.3;
+      sun.style.transform = `scale(${0.8 + brightness * 0.4})`;
+    }
   } else {
     // Если ночь - прячем солнце или делаем тусклым под горизонтом
-    const sun = document.getElementById('sun');
     sun.style.display = 'none';
   }
 }
@@ -200,15 +224,45 @@ function getCurrentRealMinutes() {
   return now.getHours() * 60 + now.getMinutes();
 }
 
-// Инициализация: устанавливаем солнце по реальному времени
-let currentMinutes = getCurrentRealMinutes();
+function startSunMovement() {
+  // Останавливаем старый интервал, если есть
+  if (sunInterval) clearInterval(sunInterval);
 
-// Если реальное время не вписывается в рассвет-закат (для демо можно использовать ползунок)
-// Но лучше показать движение на примере slider
+  // Функция обновления
+  function updateSunPosition() {
+    if (
+      sunriseMinutesGlobal !== undefined &&
+      sunsetMinutesGlobal !== undefined &&
+      dayLengthGlobal > 0
+    ) {
+      const currentMinutes = getCurrentRealMinutes();
+      updateSunByMinutes(
+        currentMinutes,
+        sunriseMinutesGlobal,
+        sunsetMinutesGlobal,
+        dayLengthGlobal,
+      );
+    }
+  }
 
-function startWithRealTime() {
-  updateSunByMinutes(currentMinutes);
+  // Обновляем сразу
+  updateSunPosition();
+
+  // И каждую минуту
+  sunInterval = setInterval(updateSunPosition, 60000);
 }
+
+// Также добавляем обновление при изменении размера окна
+window.addEventListener('resize', () => {
+  if (
+    sunriseMinutesGlobal !== undefined &&
+    sunsetMinutesGlobal !== undefined &&
+    dayLengthGlobal > 0
+  ) {
+    const currentMinutes = getCurrentRealMinutes();
+    updateSunByMinutes(currentMinutes, sunriseMinutesGlobal, sunsetMinutesGlobal, dayLengthGlobal);
+  }
+});
 
 // ========== ОКОНЧАНИЕ ВРЕМЯ РАССВЕТА И ЗАКАТА ==========
 

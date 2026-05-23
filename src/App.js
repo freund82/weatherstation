@@ -7,7 +7,7 @@ function App() {
     <div className="container">
       {/*Sunrise and sunset block*/}
       <div className="sunBlock">
-        <img className="sunImg" src={SunImg} className="sunImg" alt="sun"></img>
+        <img id="sun" className="sunImg" src={SunImg} className="sunImg" alt="sun"></img>
         <div className="sunRiseTime">
           <div>
             <span>Восход</span>
