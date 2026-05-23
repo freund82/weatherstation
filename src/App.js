@@ -8,6 +8,19 @@ function App() {
       {/*Sunrise and sunset block*/}
       <div className="sunBlock">
         <img className="sunImg" src={SunImg} className="sunImg" alt="sun"></img>
+        <div className="sunRiseTime">
+          <div>
+            <span>Восход</span>
+            <br></br>
+            <span id="sunrise"></span>
+          </div>
+          <div>
+            <span>Закат</span>
+            <br></br>
+            <span id="sunset"></span>
+          </div>
+        </div>
+        <div className="horizon" id="horizon"></div>
       </div>
       {/*End*/}
       <div className="weatherBlock">

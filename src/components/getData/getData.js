@@ -88,6 +88,130 @@ function alertData(alerts) {
   return alertText;
 }
 
+// ========== ВРЕМЯ РАССВЕТА И ЗАКАТА ==========
+function SunriseSunset(weatherData) {
+  weatherData.sunrise = weatherData.sunrise.getHours() + ':' + weatherData.sunrise.getMinutes(); //Время рассвета в формате ЧЧ:ММ
+  weatherData.sunset = weatherData.sunset.getHours() + ':' + weatherData.sunset.getMinutes(); //Время заката в формате ЧЧ:ММ
+
+  // Конвертируем "HH:MM" в минуты от полуночи
+  function timeToMinutes(timeStr) {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
+
+  // Конвертируем минуты в "HH:MM"
+  function minutesToTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  }
+
+  // Получаем данные о рассвете и закате из объекта
+  const sunriseMinutes = timeToMinutes(weatherData.sunrise);
+  const sunsetMinutes = timeToMinutes(weatherData.sunset);
+  const dayLength = sunsetMinutes - sunriseMinutes; // продолжительность дня в минутах
+
+  // Отображаем рассвет и закат в интерфейсе
+  document.getElementById('sunrise').innerText = weatherData.sunrise;
+  document.getElementById('sunset').innerText = weatherData.sunset;
+
+  // Элементы
+  const sun = document.getElementById('sun');
+  const horizon = document.getElementById('horizon');
+}
+
+// Функция для вычисления позиции солнца на дуге
+// Процент дня от 0 (рассвет) до 1 (закат)
+function getSunPosition(percent, horizon) {
+  // Ограничиваем percent от 0 до 1
+  percent = Math.min(1, Math.max(0, percent));
+
+  // Ширина контейнера
+  const containerWidth = horizon.clientWidth;
+  const containerHeight = horizon.clientHeight;
+
+  // Земля занимает нижние 80px, значит "небо" высотой containerHeight - 80
+  const skyHeight = containerHeight - 80;
+
+  // X: от 5% слева до 95% справа (чтобы солнце не упиралось в края)
+  const minX = containerWidth * 0.05;
+  const maxX = containerWidth * 0.95;
+  const x = minX + (maxX - minX) * percent;
+
+  // Y: по синусоиде - в полдень (percent = 0.5) максимальная высота
+  // В процентах: максимальная высота = 70% от высоты неба
+  const maxHeightPercent = 0.7;
+  const maxHeight = skyHeight * maxHeightPercent;
+
+  // sin(pi * percent) даёт 0 в начале и конце, 1 в середине
+  const yFactor = Math.sin(Math.PI * percent);
+  // Высота от земли: чем больше yFactor, тем выше
+  const heightFromGround = maxHeight * yFactor;
+
+  // Y координата = высота неба - высота от земли + смещение от земли
+  const y = containerHeight - 80 - heightFromGround + 20;
+
+  return { x, y };
+}
+
+// Обновить положение солнца по текущему времени (в минутах)
+function updateSunByMinutes(currentMinutes, sunriseMinutes, sunsetMinutes, dayLength) {
+  // Если текущее время вне диапазона рассвет-закат -> солнце не видно или за горизонтом
+  let percent = 0;
+  let isDay = true;
+
+  if (currentMinutes <= sunriseMinutes) {
+    // До рассвета -> солнце в 0% (на горизонте слева, но невидимо)
+    percent = 0;
+    isDay = false;
+  } else if (currentMinutes >= sunsetMinutes) {
+    // После заката -> солнце в 100% (за горизонтом справа)
+    percent = 1;
+    isDay = false;
+  } else {
+    // Дневное время: рассчитываем процент от рассвета до заката
+    percent = (currentMinutes - sunriseMinutes) / dayLength;
+    isDay = true;
+  }
+
+  // Показываем/скрываем солнце в зависимости от времени суток
+  if (isDay) {
+    const sun = document.getElementById('sun');
+    sun.style.display = 'block';
+    const { x, y } = getSunPosition(percent);
+    sun.style.left = `${x - sun.offsetWidth / 2}px`;
+    sun.style.bottom = `${y}px`;
+    sun.style.top = 'auto'; // используем bottom для удобства
+
+    // Дополнительно меняем яркость/размер в зависимости от высоты
+    const brightness = 0.5 + Math.sin(Math.PI * percent) * 0.5;
+    sun.style.opacity = 0.7 + brightness * 0.3;
+    sun.style.transform = `scale(${0.8 + brightness * 0.4})`;
+  } else {
+    // Если ночь - прячем солнце или делаем тусклым под горизонтом
+    const sun = document.getElementById('sun');
+    sun.style.display = 'none';
+  }
+}
+
+// Получить текущее реальное время в минутах
+function getCurrentRealMinutes() {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+// Инициализация: устанавливаем солнце по реальному времени
+let currentMinutes = getCurrentRealMinutes();
+
+// Если реальное время не вписывается в рассвет-закат (для демо можно использовать ползунок)
+// Но лучше показать движение на примере slider
+
+function startWithRealTime() {
+  updateSunByMinutes(currentMinutes);
+}
+
+// ========== ОКОНЧАНИЕ ВРЕМЯ РАССВЕТА И ЗАКАТА ==========
+
 // ========== ПЕРЕКЛЮЧЕНИЕ ОТОБРАЖЕНИЯ ==========
 
 let showWind = true; // true = показываем ветер, false = показываем описание
@@ -183,6 +307,18 @@ function updateWeather() {
         const windGust = data.current.wind_gust;
         const direction = getWindDirection(windDeg);
         windElement.innerHTML = formatWind(windSpeed, windGust, direction);
+      }
+
+      // 9. Время рассвета и заката
+      if (data?.current?.sunrise && data?.current?.sunset) {
+        const sunrise = new Date(data.current.sunrise * 1000);
+        const sunset = new Date(data.current.sunset * 1000);
+        const weatherData = {
+          sunrise, // рассвет (утро)
+          sunset, // закат (вечер)
+        };
+
+        SunriseSunset(weatherData);
       }
 
       // Важно: после обновления данных синхронизируем отображение
