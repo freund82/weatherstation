@@ -193,6 +193,12 @@ Sunrise Sunset styles
   bottom:1rem; /* Оинаковой высоты с GROUND_HEIGHT */
 }
 
+@media(max-width:1200px){
+  .sunBlock{
+    left:31.7%;
+  }
+}
+
 @media(max-width:900px){
     html{
       font-size: 45%;
@@ -220,5 +226,10 @@ Sunrise Sunset styles
     }
     .cityDate{
       height:8rem;
+    }
+
+    .sunBlock{
+      top:28%;
+      left:47.7%;
     }
 }
