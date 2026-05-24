@@ -19,9 +19,9 @@ function formatWind(speed, gust, direction) {
   if (!speed || speed === 0) return 'штиль';
 
   const speedRounded = speed.toFixed(2);
-  const gustRounded = gust ? gust.toFixed(2) : '0';
+  const gustRounded = gust ? gust.toFixed(2) : false;
 
-  return `${direction} ${speedRounded} (${gustRounded}) м/с`;
+  return `${direction} ${speedRounded} ${gustRounded ? gustRounded : ''} м/с`; //Если данных по порыву ветра нет, то выводим только скорость
 }
 
 // Установка иконки погоды по ID
