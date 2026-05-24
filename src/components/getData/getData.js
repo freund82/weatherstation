@@ -21,7 +21,7 @@ function formatWind(speed, gust, direction) {
   const speedRounded = speed.toFixed(2);
   const gustRounded = gust ? gust.toFixed(2) : false;
 
-  return `${direction} ${speedRounded} ${gustRounded ? gustRounded : ''} м/с`; //Если данных по порыву ветра нет, то выводим только скорость
+  return `${direction} ${speedRounded} ${gustRounded ? `(${gustRounded})` : ''} м/с`; //Если данных по порыву ветра нет, то выводим только скорость
 }
 
 // Установка иконки погоды по ID
