@@ -75,11 +75,12 @@ function convertPressure(hpa) {
 //Вывод alert сообщений
 function alertData(alerts) {
   let alertText = [...new Set(alerts.map((alert) => alert.description))].join('\n');
-  if (alertText.length > 100 && alertText.length < 300) {
+  console.log(alertText.length);
+  if (alertText.length > 100 && alertText.length < 250) {
     let alertBlock = document.querySelector('.alertBlock');
     alertBlock.style.height = '10rem';
     return alertText;
-  } else if (alertText.length > 300) {
+  } else if (alertText.length > 250) {
     let alertBlock = document.querySelector('.alertBlock');
     alertBlock.style.height = '20rem';
     return alertText;
