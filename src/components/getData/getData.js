@@ -75,7 +75,7 @@ function convertPressure(hpa) {
 //Вывод alert сообщений
 function alertData(alerts) {
   let alertText = [...new Set(alerts.map((alert) => alert.description))].join('\n');
-  console.log(alertText.length);
+
   if (alertText.length > 100 && alertText.length < 250) {
     let alertBlock = document.querySelector('.alertBlock');
     alertBlock.style.height = '10rem';
@@ -94,7 +94,7 @@ function alertData(alerts) {
 let sunriseMinutesGlobal, sunsetMinutesGlobal, dayLengthGlobal;
 let sunInterval = null; // ЗАПУСК ДВИЖЕНИЯ СОЛНЦА
 
-const GROUND_HEIGHT = 1; // Высота земли в пикселях
+const GROUND_HEIGHT = 20; // Высота земли в пикселях
 
 function SunriseSunset(weatherData) {
   weatherData.sunrise =
