@@ -94,7 +94,7 @@ function alertData(alerts) {
 let sunriseMinutesGlobal, sunsetMinutesGlobal, dayLengthGlobal;
 let sunInterval = null; // ЗАПУСК ДВИЖЕНИЯ СОЛНЦА
 
-const GROUND_HEIGHT = 20; // Высота земли в пикселях
+const GROUND_HEIGHT = 1; // Высота земли в пикселях
 
 function SunriseSunset(weatherData) {
   weatherData.sunrise =
