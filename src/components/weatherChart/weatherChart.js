@@ -26,7 +26,7 @@ function chartWeather() {
   var LobnyaChart =
     'https://api.codetabs.com/v1/proxy?quest=' +
     encodeURIComponent(
-      'https://api.openweathermap.org/data/2.5/weather?id=534595&units=metric&lang=ru&appid=0a3b8b46154405dbda0b3fe953256d39',
+      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
     );
   fetch(LobnyaChart)
     .then((responce) => responce.json())
