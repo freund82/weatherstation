@@ -32,7 +32,7 @@ function chartWeather() {
     .then((responce) => responce.json())
     .then(
       (p) => {
-        pressureValues.push((p.main.pressure * 0.750064 - 18).toFixed(0)); // Add new value to pressureValues array
+        pressureValues.push((p.current.pressure * 0.750064 - 18).toFixed(0)); // Add new value to pressureValues array
         drawChart(); // Update chart with new data
       } /*(localStorage.length-1==10)?localStorage.clear():null;*/,
     ); /*(p=>pres.push((((p.main.pressure)*0.750064)-18).toFixed(0)))*/
