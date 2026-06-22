@@ -23,12 +23,7 @@ Chart.register(...registerables);
 let myChart = null;
 
 function chartWeather() {
-  var LobnyaChart =
-    'https://api.codetabs.com/v1/proxy?quest=' +
-    encodeURIComponent(
-      'https://ru.api.openweathermap.org/data/3.0/onecall?lat=56.01&lon=37.47&lang=ru&exclude=minutely,hourly,daily&units=metric&appid=6ec173dc6f65d2c9a0e7cbe434e68bb8',
-    );
-  fetch(LobnyaChart)
+  fetch('http://localhost:3001/api/weather')
     .then((responce) => responce.json())
     .then(
       (p) => {
