@@ -294,9 +294,12 @@ function toggleDisplay() {
 // ========== ОСНОВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ ==========
 
 function updateWeather() {
-  const url = 'http://localhost:3001/api/weather';
+  // В production (на Render.com) API доступен по тому же домену,
+  // в development используем localhost:3001 (прокси-сервер)
+  const apiUrl =
+    process.env.NODE_ENV === 'production' ? '/api/weather' : 'http://localhost:3001/api/weather';
 
-  fetch(url)
+  fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
