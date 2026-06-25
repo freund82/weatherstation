@@ -5,19 +5,8 @@ const app = express();
 // Порт из окружения Render или 3001 для локальной разработки
 const PORT = process.env.PORT || 3001;
 
-// ========== PRODUCTION: раздача статики React ==========
-// В production режиме сервер отдаёт собранную React-статику из папки build
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'build')));
-
-  // Все не-API запросы направляем на index.html (для SPA-роутинга)
-  app.get(/^\/(?!api\/).*/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
-}
-
 // ========== CORS ==========
-// В development режиме CORS для фронтенда на 3000 порту
+// Должен быть ПЕРЕД всеми маршрутами, включая статику
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -27,6 +16,12 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// ========== PRODUCTION: раздача статики React ==========
+// В production режиме сервер отдаёт собранную React-статику из папки build
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'build')));
+}
 
 // ========== Прокси-эндпоинт для OpenWeatherMap OneCall API 3.0 ==========
 app.get('/api/weather', async (req, res) => {
@@ -66,6 +61,15 @@ app.get('/api/weather', async (req, res) => {
     res.status(500).json({ error: 'Внутренняя ошибка сервера', details: error.message });
   }
 });
+
+// ========== SPA fallback (только production) ==========
+// Этот маршрут должен быть ПОСЛЕДНИМ — срабатывает только если
+// ни один из вышестоящих middleware не обработал запрос
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+}
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[SERVER] Прокси-сервер запущен на порту ${PORT}`);
