@@ -23,7 +23,7 @@ Chart.register(...registerables);
 let myChart = null;
 
 function chartWeather() {
-  fetch('http://localhost:3001/api/weather')
+  fetch('/api/weather')
     .then((responce) => responce.json())
     .then(
       (p) => {
@@ -69,7 +69,7 @@ function drawChart() {
 
 //setInterval(drawChart, 599500);
 
-export default chartWeather();
+export default chartWeather;
 
 document.onkeydown = function (e) {
   e = e || window.event;

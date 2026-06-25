@@ -1,8 +1,13 @@
+import { useEffect } from 'react';
 import Currentweather from './components/getData/getData';
 import weatherChart from './components/weatherChart/weatherChart';
 import SunImg from './assets/icons/sun.png';
 
 function App() {
+  useEffect(() => {
+    weatherChart();
+  }, []);
+
   return (
     <div className="container">
       {/*Sunrise and sunset block*/}
