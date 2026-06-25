@@ -294,10 +294,12 @@ function toggleDisplay() {
 // ========== ОСНОВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ ==========
 
 function updateWeather() {
-  // В production (на Render.com) API доступен по тому же домену,
-  // в development используем localhost:3001 (прокси-сервер)
-  const apiUrl =
-    process.env.NODE_ENV === 'production' ? '/api/weather' : 'http://localhost:3001/api/weather';
+  // Определяем API URL:
+  // - Если приложение открыто не на localhost → production (Render) → относительный путь
+  // - Если localhost → development → используем порт 3001 (прокси-сервер)
+  const isLocalhost =
+    window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const apiUrl = isLocalhost ? 'http://localhost:3001/api/weather' : '/api/weather';
 
   fetch(apiUrl)
     .then((response) => {

@@ -1,12 +1,16 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const app = express();
 
 // Порт из окружения Render или 3001 для локальной разработки
 const PORT = process.env.PORT || 3001;
 
+// Определяем production: либо NODE_ENV, либо наличие папки build
+const isProduction =
+  process.env.NODE_ENV === 'production' || fs.existsSync(path.join(__dirname, 'build'));
+
 // ========== CORS ==========
-// Должен быть ПЕРЕД всеми маршрутами, включая статику
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -18,9 +22,11 @@ app.use((req, res, next) => {
 });
 
 // ========== PRODUCTION: раздача статики React ==========
-// В production режиме сервер отдаёт собранную React-статику из папки build
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
+  console.log(`[SERVER] Production режим: раздача статики из build/`);
   app.use(express.static(path.join(__dirname, 'build')));
+} else {
+  console.log(`[SERVER] Development режим: статика не раздаётся`);
 }
 
 // ========== Прокси-эндпоинт для OpenWeatherMap OneCall API 3.0 ==========
@@ -63,16 +69,19 @@ app.get('/api/weather', async (req, res) => {
 });
 
 // ========== SPA fallback (только production) ==========
-// Этот маршрут должен быть ПОСЛЕДНИМ — срабатывает только если
-// ни один из вышестоящих middleware не обработал запрос
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    const filePath = path.join(__dirname, 'build', 'index.html');
+    if (fs.existsSync(filePath)) {
+      res.sendFile(filePath);
+    } else {
+      res.status(500).send('Build not found. Run "npm run build" first.');
+    }
   });
 }
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[SERVER] Прокси-сервер запущен на порту ${PORT}`);
-  console.log(`[SERVER] Режим: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`[SERVER] Режим: ${isProduction ? 'production' : 'development'}`);
   console.log(`[SERVER] Эндпоинт: /api/weather`);
 });
