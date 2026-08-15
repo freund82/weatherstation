@@ -1,5 +1,7 @@
 // ========== УТИЛИТЫ ==========
 
+import getApiUrl from '../../apiConfig';
+
 // Определение направления ветра
 function getWindDirection(deg) {
   if (deg === undefined || deg === null) return '';
@@ -295,11 +297,9 @@ function toggleDisplay() {
 
 function updateWeather() {
   // Определяем API URL:
-  // - Если приложение открыто не на localhost → production (Render) → относительный путь
-  // - Если localhost → development → используем порт 3001 (прокси-сервер)
-  const isLocalhost =
-    window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const apiUrl = isLocalhost ? 'http://localhost:3001/api/weather' : '/api/weather';
+  // - Если localhost → development → используем порт 3001 (Node-прокси)
+  // - Иначе → путь вычисляется относительно каталога приложения (корень или подпапка)
+  const apiUrl = getApiUrl();
 
   fetch(apiUrl)
     .then((response) => {

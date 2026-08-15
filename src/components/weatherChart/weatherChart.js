@@ -1,5 +1,6 @@
 //Этот код до варианта deepseek.
 import { Chart, registerables } from 'chart.js';
+import getApiUrl from '../../apiConfig';
 
 let pressureValues = [];
 
@@ -23,7 +24,7 @@ Chart.register(...registerables);
 let myChart = null;
 
 function chartWeather() {
-  fetch('/api/weather')
+  fetch(getApiUrl())
     .then((responce) => responce.json())
     .then(
       (p) => {

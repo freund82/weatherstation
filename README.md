@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# Weather Station
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Веб-приложение метеостанции для города **Лобня** (Московская область). Показывает текущую погоду, давление, влажность, скорость и направление ветра, время восхода/заката с анимированным движением солнца, а также график изменения давления.
 
-## Available Scripts
+Данные берутся из [OpenWeatherMap OneCall API 3.0](https://openweathermap.org/api/one-call-3).
 
-In the project directory, you can run:
+## Технологии
 
-### `npm start`
+- **Фронтенд:** React 17 (Create React App), Chart.js, styled-components
+- **Серверная часть (хостинг):** PHP 7.4+ (прокси к OpenWeatherMap)
+- **Серверная часть (локальная разработка):** Node.js / Express
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Структура серверной части
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Файл | Назначение |
+|------|------------|
+| `api/weather.php` | PHP-прокси к OpenWeatherMap. Обслуживает маршрут `/api/weather`. Поддерживает cURL и `file_get_contents`. |
+| `.htaccess` | Правила Apache: маршрутизация `/api/weather` на PHP, SPA-fallback на `index.html`, кэширование и сжатие. |
+| `server.js` | Node.js-прокси для локальной разработки (порт 3001). |
 
-### `npm test`
+## Локальная разработка
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Требуется Node.js и npm.
 
-### `npm run build`
+```bash
+npm install
+npm run dev
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Запустится два процесса:
+- React-сервер разработки на `http://localhost:3000`
+- Node-прокси на `http://localhost:3001`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Фронтенд на `localhost` обращается к `http://localhost:3001/api/weather`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Сборка для продакшена
 
-### `npm run eject`
+```bash
+npm run build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Бандл появится в папке `build/`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Развёртывание на PHP-хостинге
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Для классического хостинга с поддержкой PHP и Apache (`mod_rewrite`).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Что требуется на хостинге
 
-## Learn More
+- PHP 7.4+ (лучше 8.x)
+- Apache с включённым `mod_rewrite`
+- Расширение PHP `curl` **или** включённый `allow_url_fopen` (используется один из двух вариантов)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Шаги
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Выполните локально сборку:
+   ```bash
+   npm run build
+   ```
 
-### Code Splitting
+2. Загрузите **содержимое папки `build/`** в целевую папку сайта. Это может быть корень (`public_html` / `htdocs`) **или** вложенная папка (например `/weatherstation/`), если проект размещается внутри уже существующего сайта.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. Скопируйте **в ту же папку**, куда положили `index.html` из `build/`:
+   - файл `api/weather.php` (вместе с папкой `api`)
+   - файл `.htaccess`
 
-### Analyzing the Bundle Size
+   > ⚠️ Файлы `api/` и `.htaccess` обязательно должны лежать рядом с `index.html`, в одной папке.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   Итоговая структура (пример для корня сайта):
+   ```
+   /public_html
+     ├── index.html
+     ├── static/
+     ├── api/
+     │   └── weather.php
+     └── .htaccess
+   ```
 
-### Making a Progressive Web App
+4. **Ключ API OpenWeatherMap.** По умолчанию в `api/weather.php` используется встроенный ключ. Рекомендуется задать свой через переменную окружения `OWM_API_KEY` (через панель хостинга / `.htaccess` / файл `.env` на сервере):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   ```apache
+   SetEnv OWM_API_KEY "ваш_ключ"
+   ```
 
-### Advanced Configuration
+   Если переменная не задана, используется захардкоженное значение по умолчанию.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+5. Проверьте работоспособность, открыв в браузере:
+   ```
+   https://ваш-домен/                # если в корне
+   https://ваш-домен/weatherstation/ # если во вложенной папке
+   ```
+   и API-эндпоинт:
+   ```
+   https://ваш-домен/api/weather                       # если в корне
+   https://ваш-домен/weatherstation/api/weather        # если во вложенной папке
+   ```
 
-### Deployment
+### Размещение во вложенной папке (например `/weatherstation/`)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Проект поддерживает размещение как в корне сайта, так и во вложенной папке.
 
-### `npm run build` fails to minify
+- Путь к API вычисляется фронтендом автоматически относительно каталога приложения (см. `src/apiConfig.js`), поэтому дополнительной настройки не требуется.
+- Файлы размещаются по тому же принципу — `api/` и `.htaccess` кладутся **в папку приложения**, рядом с `index.html`:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  ```
+  /public_html/weatherstation/
+    ├── index.html
+    ├── static/
+    ├── api/
+    │   └── weather.php
+    └── .htaccess
+  ```
+
+### Проверка `.htaccess`
+
+Убедитесь, что на вашем хостинге разрешено использование `.htaccess` (часто это настраивается в панели хостинга). Без него маршрут `/api/weather` не будет работать.
+
+## Как работает маршрутизация
+
+- Запрос `/api/weather` перехватывается правилом в `.htaccess` и выполняется скрипт `api/weather.php`.
+- PHP-скрипт формирует запрос к OpenWeatherMap и возвращает JSON-ответ клиенту.
+- Остальные запросы, не указывающие на реальный файл, возвращают `index.html` (SPA-fallback).
+
+## Переменные окружения
+
+| Переменная | Описание |
+|------------|----------|
+| `OWM_API_KEY` | Ключ OpenWeatherMap API. Если не задан — используется значение по умолчанию в `api/weather.php`. |

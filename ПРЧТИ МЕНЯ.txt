@@ -1,0 +1,8 @@
+.../weatherstation/
+  ├── index.html
+  ├── static/
+  ├── api/
+  │   └── weather.php
+  └── .htaccess
+
+  в папке build в проекте должна быть еще папка api и файл htaccess
